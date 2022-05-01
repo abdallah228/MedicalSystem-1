@@ -84,7 +84,7 @@ Route::group(['prefix' => 'admin/', 'middleware' => 'auth:admin'], function () {
         Route::delete('/{id}', [ServicesController::class, 'destroy'])->name('services.destroy');
         Route::put('/restore/{id}', [ServicesController::class, 'restore'])->name('services.restore');
         Route::put('/changeStatues/{id}', [ServicesController::class, 'changeStatues'])->name('services.changeStatues');
-    });
+    });//
 
     /**
     * ServiceProviders
