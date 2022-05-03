@@ -24,12 +24,10 @@ class DeliveryUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
             'name'=>'required',
             'address'=>'required',
             'phone'=>'required|unique:deliveries,phone,'.$this->id,
-            'lat'=>'required',
-            'long'=>'required',
+            'zone_id'=>'required',
         ];
     }
 }

@@ -24,19 +24,42 @@ $flag=1;
     </div>
     <div class="form-group">
         <label for="exampleFormControlSelect1"> ICON </label>
-        <input type="file" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name = "logo" value="{{$flag ? $record->icon : old('logo')}}" required>
+        <input type="file" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name = "logo" value="{{$flag ? $record->icon : old('logo')}}" @if(!$flag)required @endif>
     </div>
 
     <div class="form-group">
     <label for="exampleFormControlSelect1"> Sub Category </label>
     <select class="form-control" name="parent_id">
+        <option value="{{$flag ? $record->parent_id : ''}}">{{$flag ? $record->parentCategory->name_en ?? '' : ''}} </option>
         @foreach($categories as $category)
-        <option value=""> </option>
+        @if($flag)
+        @if($record->parent_id == $category->id)
+        @else
         <option value="{{ $category->id }}">{{ $category["name_".app()->getLocale()]  }}</option>
+        @endif
+        @else
+        <option value="{{ $category->id }}">{{ $category["name_".app()->getLocale()]  }}</option>
+        @endif
         @endforeach
     </select>
     </div>
 
+    <div class="form-group">
+    <label for="exampleFormControlSelect1"> Type </label>
+    <select class="form-control" name="type">
+        <option value="{{$flag ? $record->type : $types['regular']}}">{{$flag ? $record->type : ''}} </option>
+        @foreach($types as $type)
+        @if($flag)
+        @if($record->type == $type)
+        @else
+        <option value="{{ $type }}">{{ $type  }}</option>
+        @endif
+        @else
+        <option value="{{ $type }}">{{ $type  }}</option>
+        @endif
+        @endforeach
+    </select>
+    </div>
     @if ($flag)
         <input type="hidden" value="{{$record->id}}" name="id">
     @endif

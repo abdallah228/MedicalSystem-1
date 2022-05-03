@@ -28,16 +28,23 @@ $flag=1;
         <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter address" name = "address" value="{{$flag ? $record->address : old('address')}}" required>
     </div>
 
-    <div class="form-group">
-        <label for="exampleFormControlSelect1"> lat</label>
-        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter lat" name = "lat" value="{{$flag ? $record->lat : old('lat')}}" required>
-    </div>
 
     <div class="form-group">
-        <label for="exampleFormControlSelect1"> long</label>
-        <input type="number" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter long" name = "long" value="{{$flag ? $record->long : old('long')}}" required>
+    <label for="exampleFormControlSelect1"> Zone </label>
+    <select class="form-control" name="zone_id">
+        <option value="{{$flag ? $record->zone_id : ''}}">{{$flag ? $record->zone->name_en ?? '' : ''}} </option>
+        @foreach($zones as $zone)
+        @if($flag)
+        @if($record->zone_id == $zone->id)
+        @else
+        <option value="{{ $zone->id }}">{{ $zone["name_".app()->getLocale()]  }}</option>
+        @endif
+        @else
+        <option value="{{ $zone->id }}">{{ $zone["name_".app()->getLocale()]  }}</option>
+        @endif
+        @endforeach
+    </select>
     </div>
-
 
     @if ($flag)
         <input type="hidden" value="{{$record->id}}" name="id">

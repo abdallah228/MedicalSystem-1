@@ -1,9 +1,8 @@
 @extends('layouts.app')
 @section('content')
-
                     <div class="row">
                         <div class="col-5 m-1">
-                            <a href="{{route('deliveries.create')}}" class="btn btn-success mb-4 mt-2"><i class = "fa fa-plus"></i> Add New </a>
+                            <a href="{{route('zones.create')}}" class="btn btn-success mb-4 mt-2"><i class = "fa fa-plus"></i> Add New </a>  
                         </div>
                         <div class="col-6">
                             <!-- Actual search box -->
@@ -23,9 +22,8 @@
                     <thead>
                         <tr>
                         <th scope="col"># </th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Address</th>
-                        <th scope="col">Phone</th>
+                        <th scope="col">Name EN</th>
+                        <th scope="col">Name AR</th>
                         <th scope="col">Active</th>
                         <th scope="col">Actions</th>
                         </tr>
@@ -34,14 +32,13 @@
                         <tr>
                         @foreach($records as $record)
                         <td>{{$record->id}}</td>
-                        <td>{{$record->name}}</td>
-                        <td>{{$record->address}}</td>
-                        <td>{{$record->phone}}</td>
+                        <td>{{$record->name_en}}</td>
+                        <td>{{$record->name_ar}}</td>
                         <td>
                             <div class="row">
                                 <div class="col-10 col-md-3">
                                     <!-- changeStatues Button -->
-                                    <form method="post" action="{{url('admin/deliveries/changeStatues/'.$record->id)}}"
+                                    <form method="post" action="{{url('admin/zones/changeStatues/'.$record->id)}}"
                                         enctype="multipart/form-data">
                                         {{csrf_field()}}
                                         @method('put')
@@ -59,7 +56,7 @@
                         <div class="row">
                             <div class="col-10 col-md-3">
                                 <!-- Delete Button -->
-                                <form method="post" action="{{route('deliveries.destroy',$record->id)}}"
+                                <form method="post" action="{{url('admin/zones/'.$record->id)}}"
                                     enctype="multipart/form-data">
                                     {{csrf_field()}}
                                     @method('delete')
@@ -69,8 +66,8 @@
                             </div>
                             <div class="col-10 col-md-3">
                                 <!-- Edit Button -->
-                                <form method="post"
-                                    action= "{{route('deliveries.edit',$record->id)}}"
+                                <form method="post" 
+                                    action= "{{route('zones.edit')}}"
                                     enctype="multipart/form-data">
                                         {{csrf_field()}}
                                         @method('get')
@@ -78,13 +75,25 @@
                                         <button type="submit" class="btn btn-secondary mt-1"><i class="far fa-edit"></i></button>
                                 </form>
                             </div>
+                            <div class="col-10 col-md-3">
+                                <!-- Show Button -->
+                                <form method="post" 
+                                    action= "{{url('admin/zones/'.$record->id)}}"
+                                    enctype="multipart/form-data">
+                                        {{csrf_field()}}
+                                        @method('get')
+                                        <input type="hidden" value="{{$record->id}}" name="id">
 
+                                        <button type="submit" class="btn btn-primary mt-1"><i class="fas fa-eye"></i></button>
+                                </form>
+                            </div>
                         </div>
                         </td>
                         </tr>
                     </tbody>
                     @endforeach
                 </table>
-                </div>
-                @endif
+            </div>
+            {{ $records->links() }}    
+        @endif
 @endsection

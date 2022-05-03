@@ -4,7 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class ServiceCreateRequest extends FormRequest
+class ZoneUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,13 +24,8 @@ class ServiceCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name_en'=>'required',
-            'name_ar'=>'required',
-            'description_en'=>'required',
-            'description_ar'=>'required',
-            'img'=>'required|mimes:jpg,jpeg,png',
-            'price'=>'required',
-            'service_provider_id'=>'required',
+            'name_en'=>'required|unique:zones,name_en,'.$this->id,
+            'name_ar'=>'required|unique:zones,name_ar,'.$this->id,
         ];
     }
 }

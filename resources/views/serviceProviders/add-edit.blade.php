@@ -28,29 +28,42 @@ $flag=1;
         <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter address" name = "address" value="{{$flag ? $record->address : old('address')}}" required>
     </div>
 
-    <div class="form-group">
-        <label for="exampleFormControlSelect1"> lat</label>
-        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter lat" name = "lat" value="{{$flag ? $record->lat : old('address')}}" required>
-    </div>
-
-    <div class="form-group">
-        <label for="exampleFormControlSelect1"> long</label>
-        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter long" name = "long" value="{{$flag ? $record->long : old('address')}}" required>
-    </div>
 
     <div class="form-group">
         <label for="exampleFormControlSelect1"> Logo </label>
-        <input type="file" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name = "logo" value="{{$flag ? $record->logo : old('logo')}}" required>
-        <img src="{{ $flag ? $record->logo : old('logo') }}" height="200px" width="200px" >
-
+        <input type="file" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name = "img" value="{{$flag ? $record->logo : old('img')}}" @if(!$flag)required @endif>
     </div>
 
     <div class="form-group">
     <label for="exampleFormControlSelect1"> Category </label>
     <select class="form-control" name="category_id">
+        <option value="{{$flag ? $record->category_id : ''}}">{{$flag ? $record->category->name_en ?? '' : ''}} </option>
         @foreach($categories as $category)
-        <option value=""> </option>
+        @if($flag)
+        @if($record->category_id == $category->id)
+        @else
         <option value="{{ $category->id }}">{{ $category["name_".app()->getLocale()]  }}</option>
+        @endif
+        @else
+        <option value="{{ $category->id }}">{{ $category["name_".app()->getLocale()]  }}</option>
+        @endif
+        @endforeach
+    </select>
+    </div>
+
+    <div class="form-group">
+    <label for="exampleFormControlSelect1"> Zone </label>
+    <select class="form-control" name="zone_id">
+        <option value="{{$flag ? $record->zone_id : ''}}">{{$flag ? $record->zone->name_en ?? '' : ''}} </option>
+        @foreach($zones as $zone)
+        @if($flag)
+        @if($record->zone_id == $zone->id)
+        @else
+        <option value="{{ $zone->id }}">{{ $zone["name_".app()->getLocale()]  }}</option>
+        @endif
+        @else
+        <option value="{{ $zone->id }}">{{ $zone["name_".app()->getLocale()]  }}</option>
+        @endif
         @endforeach
     </select>
     </div>

@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use PhpParser\Node\Expr\Cast\Double;
 
 class ServiceProvider extends Model
 {
@@ -27,6 +26,11 @@ class ServiceProvider extends Model
     public function services()
     {
         return $this->hasMany(Service::class,'service_provider_id');
+    }
+
+    public function zone()
+    {
+        return $this->belongsTo(Zone::class,'zone_id');
     }
 
     public function getLogoAttribute($value)

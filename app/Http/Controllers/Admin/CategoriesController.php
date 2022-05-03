@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\enum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CategoryCreateRequest  as CreateRequest;
 use App\Http\Requests\Admin\CategoryCreateRequest  as UpdateRequest;
-use App\Http\Resources\Admin\CategoryListResource  as ListResource;
-use App\Http\Resources\Admin\CategorySingleResource  as SingleResource;
 use App\Models\Category  as Model;
-use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -24,9 +22,8 @@ class CategoriesController extends Controller
     public function index()
     {
         try {
-            $data = Model::latest()->get();
-            $records = ListResource::collection($data);
-            return view($this->path.'.list', compact('records'));
+            $records = Model::with('parentCategory')->latest()->paginate(2);
+            return view($this->path.'.list',compact('records'));
         } catch (\Throwable $th) {
             Log::error($th);
             return view('layouts.wrong');
@@ -41,9 +38,8 @@ class CategoriesController extends Controller
     public function show($id)
     {
         try {
-            $data = Model::find($id);
-            if ($data){
-            $record = new SingleResource($data);
+            $record = Model::with('parentCategory')->find($id);
+            if ($record){
                 return view($this->path.'.show',compact(['record']));
             }else {
                  return redirect('admin/'.$this->path)->with('error','Not Found');
@@ -61,8 +57,9 @@ class CategoriesController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
-        return view($this->path.'.add-edit',compact('categories'));
+        $categories = Model::whereActive(true)->get();
+        $types = enum::CategoryType;
+        return view($this->path.'.add-edit',compact(['categories','types']));
     }
 
     /**
@@ -94,9 +91,11 @@ class CategoriesController extends Controller
     public function edit(Request $request)
     {
         try {
-           $record = Model::find($request->id);
+           $record = Model::with('parentCategory')->find($request->id);
             if ($record){
-                return view($this->path.'.add-edit',compact(['record']));
+                $categories = Model::whereActive(true)->get();
+                $types = enum::CategoryType;
+                return view($this->path.'.add-edit',compact(['record','categories','types']));
             }else {
                 return redirect('admin/'.$this->path)->with('error','Not Found');
             }
@@ -116,7 +115,11 @@ class CategoriesController extends Controller
         try {
             $record = Model::find($id);
             if ($record){
-                $record->update($request->all());
+                deleteImage($record->getRawOriginal('icon'),$this->path);
+                if($request->hasFile('logo')){
+                    $request['icon'] = uploadImage($request->file('logo'),$this->path);
+                }
+                $record->update($request->except('logo'));
                 return redirect('admin/'.$this->path)->with('success','Updated Successfully');
             }else {
                 return redirect('admin/'.$this->path)->with('error','Not Found');
@@ -137,6 +140,7 @@ class CategoriesController extends Controller
         try {
             $record = Model::find($id);
             if ($record){
+                deleteImage($record->getRawOriginal('icon'),$this->path);
                 $record->delete();
                 return redirect('admin/'.$this->path)->with('success','Deleted Successfully');
             }else {
@@ -156,8 +160,7 @@ class CategoriesController extends Controller
     public function trashed()
     {
         try {
-            $data = Model::onlyTrashed()->get();
-            $records = ListResource::collection($data);
+            $records = Model::onlyTrashed()->get();
             return view($this->path.'.list'.'/trashed', compact('records'));
         } catch (\Throwable $th) {
             Log::error($th);
@@ -208,5 +211,28 @@ class CategoriesController extends Controller
             return view('layouts.wrong');
         }
     }
+
+    /**
+    * Change Statues Of Need Delivery Flag
+    * @param $id
+    * @return \Illuminate\Http\JsonResponse
+    */
+    public function needDelivery($id)
+    {
+        try {
+            $record = Model::find($id);
+            if ($record){
+                $record->need_delivery = !$record->need_delivery;
+                $record->save();
+                return redirect('admin/'.$this->path)->with('success','Statues Changed Successfully');
+            }else {
+                return redirect('admin/'.$this->path)->with('error','Not Found');
+            }
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return view('layouts.wrong');
+        }
+    }
+    
 
 }

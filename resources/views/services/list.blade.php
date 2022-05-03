@@ -25,9 +25,11 @@
                         <th scope="col"># </th>
                         <th scope="col">Name EN</th>
                         <th scope="col">Name AR</th>
-                        <th scope="col">image</th>
-                        <th scope="col">price</th>
-
+                        <th scope="col">Image</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">ServiceProvider</th>
+                        <th scope="col">Active</th>
+                        <th scope="col">Actions</th>
                         </tr>
                     </thead>
                     <tbody id="myTable">
@@ -38,7 +40,7 @@
                         <td>{{$record->name_ar}}</td>
                         <td><img src = "{{$record->image}}" height="100px" width="100px"></td>
                         <td>{{$record->price}}</td>
-
+                        <td>{{$record->serviceProvider->name_en}}</td>
 
                         <td>
                             <div class="row">
@@ -50,9 +52,9 @@
                                         @method('put')
                                         <input type="hidden" value="{{$record->id}}" name="id">
                                         @if($record->active == true)
-                                            <button type="submit" class="btn btn-success mt-1"><i class="far fa-true"></i></button>
+                                            <button type="submit" class="btn btn-success mt-1"><i class="fa fa-check"></i></button>
                                         @else
-                                            <button type="submit" class="btn btn-danger mt-1"><i class="far fa-pause"></i></button>
+                                            <button type="submit" class="btn btn-danger mt-1"><i class="far fa-times"></i></button>
                                         @endif
                                     </form>
                                 </div>

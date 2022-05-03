@@ -24,15 +24,12 @@ class ServiceProviderCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
             'name_ar'=>'required',
             'name_en'=>'required',
             'address'=>'required',
-            'logo'=>'required',
-            'lat'=>'required',
-            'long'=>'required',
+            'img'=>'required|mimes:jpg,jpeg,png',
             'category_id'=>'required',
-
+            'zone_id'=>'required',
         ];
     }
 }

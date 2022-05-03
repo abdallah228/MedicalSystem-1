@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\File;
+
 if (!function_exists('uploadImage')) {
     /**
      * upload image in specific directory "storage"
@@ -27,13 +29,12 @@ if (!function_exists('deleteImage')) {
      * @param $path
      * @return int
      */
-    function deleteImage($file ,$path): int
+    function deleteImage($file , $folder): int
     {
-        if (file_exists($path.'/'.$file)) {
-            $delete = $file->delete(public_path('uploads/'.$path));
-            if ($delete) {
-                return 1;
-            }
+        $fullPath = 'uploads/'.$folder.'/'.$file;
+        $isExists = File::exists($fullPath);
+        if ($isExists) {
+            File::delete($fullPath);
         }
         return 0;
     }

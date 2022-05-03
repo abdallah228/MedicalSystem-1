@@ -18,12 +18,12 @@ class CreateServiceProvidersTable extends Migration
             $table->string('name_ar');
             $table->string('name_en');
             $table->string('address');
-            $table->string('lat');
-            $table->string('long');
             $table->string('logo');
+            $table->unsignedBigInteger('zone_id');
             $table->unsignedBigInteger('category_id');
             $table->boolean('active')->default(1);
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('zone_id')->references('id')->on('zones')->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

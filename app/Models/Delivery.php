@@ -18,4 +18,9 @@ class Delivery extends Model
         'long'=>'double',
     ];
 
+    public function zone()
+    {
+        return $this->belongsTo(Zone::class,'zone_id');
+    }
+
 }

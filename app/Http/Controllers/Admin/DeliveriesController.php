@@ -5,9 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\DeliveryCreateRequest  as CreateRequest;
 use App\Http\Requests\Admin\DeliveryUpdateRequest  as UpdateRequest;
-use App\Http\Resources\Admin\DeliveryListResource  as ListResource;
-use App\Http\Resources\Admin\DeliverySingleResource  as SingleResource;
-use App\Models\Delivery as Model;
+use App\Models\Delivery  as Model;
+use App\Models\Zone;
 use Illuminate\Support\Facades\Log;
 
 class DeliveriesController extends Controller
@@ -22,12 +21,11 @@ class DeliveriesController extends Controller
     public function index()
     {
         try {
-            $data = Model::latest()->get();
-            $records = ListResource::collection($data);
+            $records = Model::latest()->paginate(2);
             return view($this->path.'.list', compact('records'));
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 
@@ -39,16 +37,15 @@ class DeliveriesController extends Controller
     public function show($id)
     {
         try {
-            $data = Model::find($id);
-            if ($data){
-            $record = new SingleResource($data);
+            $record = Model::with('zone')->find($id);
+            if ($record){
                 return view($this->path.'.show',compact(['record']));
             }else {
-                return redirect('/'.$this->path)->with('error','Not Found');
+                 return redirect('admin/'.$this->path)->with('error','Not Found');
             }
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 
@@ -59,7 +56,8 @@ class DeliveriesController extends Controller
      */
     public function create()
     {
-        return view($this->path.'.add-edit');
+        $zones = Zone::whereActive(true)->get();
+        return view($this->path.'.add-edit',compact(['zones']));
     }
 
     /**
@@ -71,11 +69,11 @@ class DeliveriesController extends Controller
     public function store(CreateRequest $request)
     {
         try {
-            $record = Model::create($request->all());
-            return redirect()->route('deliveries.index')->with('success','Created Successfully');
+            Model::create($request->all());
+            return redirect('admin/'.$this->path)->with('success','Created Successfully');
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 
@@ -88,15 +86,16 @@ class DeliveriesController extends Controller
     public function edit($id)
     {
         try {
-           $record = Model::find($id);
+            $record = Model::find($id);
             if ($record){
-                return view($this->path.'.add-edit',compact(['record']));
+                $zones = Zone::whereActive(true)->get();
+                return view($this->path.'.add-edit',compact(['record','zones']));
             }else {
-                return redirect('/'.$this->path)->with('error','Not Found');
+                return redirect('admin/'.$this->path)->with('error','Not Found');
             }
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 
@@ -111,13 +110,13 @@ class DeliveriesController extends Controller
             $record = Model::find($id);
             if ($record){
                 $record->update($request->all());
-                return redirect()->route('deliveries.index')->with('success','Updated Successfully');
+                return redirect('admin/'.$this->path)->with('success','Updated Successfully');
             }else {
-                return redirect('/'.$this->path)->with('error','Not Found');
+                return redirect('admin/'.$this->path)->with('error','Not Found');
             }
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 
@@ -132,13 +131,13 @@ class DeliveriesController extends Controller
             $record = Model::find($id);
             if ($record){
                 $record->delete();
-                return redirect()->back()->with('success','Deleted Successfully');
+                return redirect('admin/'.$this->path)->with('success','Deleted Successfully');
             }else {
-                return redirect('/'.$this->path)->with('error','Not Found');
+                return redirect('admin/'.$this->path)->with('error','Not Found');
             }
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 
@@ -150,12 +149,11 @@ class DeliveriesController extends Controller
     public function trashed()
     {
         try {
-            $data = Model::onlyTrashed()->get();
-            $records = ListResource::collection($data);
+            $records = Model::onlyTrashed()->get();
             return view($this->path.'.list'.'/trashed', compact('records'));
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 
@@ -170,13 +168,13 @@ class DeliveriesController extends Controller
             $record = Model::onlyTrashed()->find($id);
             if ($record){
                 $record->restore();
-                return redirect('/'.$this->path.'/trashed')->with('success','Restored Successfully');
+                return redirect('admin/'.$this->path.'/trashed')->with('success','Restored Successfully');
             }else {
-                return redirect('/'.$this->path)->with('error','Not Found');
+                return redirect('admin/'.$this->path)->with('error','Not Found');
             }
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 
@@ -193,13 +191,13 @@ class DeliveriesController extends Controller
             if ($record){
                 $record->active = !$record->active;
                 $record->save();
-                return redirect('/'.$this->path)->with('success','Statues Changed Successfully');
+                return redirect('admin/'.$this->path)->with('success','Statues Changed Successfully');
             }else {
-                return redirect('/'.$this->path)->with('error','Not Found');
+                return redirect('admin/'.$this->path)->with('error','Not Found');
             }
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 

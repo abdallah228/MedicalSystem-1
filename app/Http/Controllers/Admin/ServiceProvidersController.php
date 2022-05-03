@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ServiceProviderCreateRequest  as CreateRequest;
 use App\Http\Requests\Admin\ServiceProviderUpdateRequest  as UpdateRequest;
-use App\Http\Resources\Admin\ServiceProviderListResource  as ListResource;
-use App\Http\Resources\Admin\ServiceProviderSingleResource  as SingleResource;
 use App\Models\Category;
-use App\Models\Service;
 use App\Models\ServiceProvider  as Model;
+use App\Models\Zone;
 use Illuminate\Support\Facades\Log;
 
 class ServiceProvidersController extends Controller
@@ -24,13 +22,11 @@ class ServiceProvidersController extends Controller
     public function index()
     {
         try {
-
-            $data = Model::latest()->get();
-            $records = ListResource::collection($data);
+            $records = Model::with('category')->latest()->paginate(2);
             return view($this->path.'.list', compact('records'));
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 
@@ -42,16 +38,15 @@ class ServiceProvidersController extends Controller
     public function show($id)
     {
         try {
-            $data = Model::find($id);
-            if ($data){
-            $record = new SingleResource($data);
+            $record = Model::with('category','zone')->find($id);
+            if ($record){
                 return view($this->path.'.show',compact(['record']));
             }else {
-                 return redirect('/'.$this->path)->with('error','Not Found');
+                 return redirect('admin/'.$this->path)->with('error','Not Found');
             }
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 
@@ -62,9 +57,9 @@ class ServiceProvidersController extends Controller
      */
     public function create()
     {
-        $categories = Category::get();
-
-        return view($this->path.'.add-edit',compact('categories'));
+        $categories = Category::whereActive(true)->get();
+        $zones = Zone::whereActive(true)->get();
+        return view($this->path.'.add-edit',compact(['categories','zones']));
     }
 
     /**
@@ -76,18 +71,14 @@ class ServiceProvidersController extends Controller
     public function store(CreateRequest $request)
     {
         try {
-
-            $request_data = $request->except(['logo']);
-            if($request->logo)
-            {
-                $request_data['logo'] = uploadImage($request->file('logo'),$this->path);
+            if($request->hasFile('img')){
+                $request['logo'] = uploadImage($request->file('img'),$this->path);
             }
-            Model::create($request_data);
-            // return redirect('/'.$this->path)->with('success','Created Successfully');
-            return redirect()->route('serviceProviders.index')->with('success','Created Successfully');
+            Model::create($request->except('img'));
+            return redirect('admin/'.$this->path)->with('success','Created Successfully');
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 
@@ -100,17 +91,17 @@ class ServiceProvidersController extends Controller
     public function edit($id)
     {
         try {
-           $record = Model::find($id);
-           $categories = Category::get();
-        //    dd($record);
+            $record = Model::with('zone')->find($id);
+            $categories = Category::whereActive(true)->get();
+            $zones = Zone::whereActive(true)->get();
             if ($record){
-                return view($this->path.'.add-edit',compact(['record','categories']));
+                return view($this->path.'.add-edit',compact(['record','categories','zones']));
             }else {
-                return redirect('/'.$this->path)->with('error','Not Found');
+                return redirect('admin/'.$this->path)->with('error','Not Found');
             }
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 
@@ -122,23 +113,20 @@ class ServiceProvidersController extends Controller
     public function update(UpdateRequest $request, $id)
     {
         try {
-            $request_data = $request->except(['logo']);
-            if($request->logo)
-            {
-                $request_data['logo'] = uploadImage($request->file('logo'),$this->path);
-            }
-
             $record = Model::find($id);
             if ($record){
-                $record->update($request_data);
-                return redirect()->route('serviceProviders.index')->with('success','Updated Successfully');
-
+                deleteImage($record->getRawOriginal('icon'),$this->path);
+                if($request->hasFile('img')){
+                    $request['logo'] = uploadImage($request->file('img'),$this->path);
+                }
+                $record->update($request->except('img'));
+                return redirect('admin/'.$this->path)->with('success','Updated Successfully');
             }else {
-                return redirect('/'.$this->path)->with('error','Not Found');
+                return redirect('admin/'.$this->path)->with('error','Not Found');
             }
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 
@@ -152,14 +140,15 @@ class ServiceProvidersController extends Controller
         try {
             $record = Model::find($id);
             if ($record){
+                deleteImage($record->getRawOriginal('logo'),$this->path);
                 $record->delete();
-                return redirect()->back();
+                return redirect('admin/'.$this->path)->with('success','Deleted Successfully');
             }else {
-                return redirect('/'.$this->path)->with('error','Not Found');
+                return redirect('admin/'.$this->path)->with('error','Not Found');
             }
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 
@@ -171,12 +160,11 @@ class ServiceProvidersController extends Controller
     public function trashed()
     {
         try {
-            $data = Model::onlyTrashed()->get();
-            $records = ListResource::collection($data);
+            $records = Model::onlyTrashed()->get();
             return view($this->path.'.list'.'/trashed', compact('records'));
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 
@@ -191,13 +179,13 @@ class ServiceProvidersController extends Controller
             $record = Model::onlyTrashed()->find($id);
             if ($record){
                 $record->restore();
-                return redirect('/'.$this->path.'/trashed')->with('success','Restored Successfully');
+                return redirect('admin/'.$this->path.'/trashed')->with('success','Restored Successfully');
             }else {
-                return redirect('/'.$this->path)->with('error','Not Found');
+                return redirect('admin/'.$this->path)->with('error','Not Found');
             }
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 
@@ -214,13 +202,13 @@ class ServiceProvidersController extends Controller
             if ($record){
                 $record->active = !$record->active;
                 $record->save();
-                return redirect()->back();
+                return redirect('admin/'.$this->path)->with('success','Statues Changed Successfully');
             }else {
-                return redirect('/'.$this->path)->with('error','Not Found');
+                return redirect('admin/'.$this->path)->with('error','Not Found');
             }
         } catch (\Throwable $th) {
             Log::error($th);
-            return view('layouts.500');
+            return view('layouts.wrong');
         }
     }
 

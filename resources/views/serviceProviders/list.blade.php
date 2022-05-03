@@ -25,11 +25,10 @@
                         <th scope="col"># </th>
                         <th scope="col">Name EN</th>
                         <th scope="col">Name AR</th>
-                        <th scope="col">logo</th>
-                        <th scope="col">address</th>
-                        <th scope="col">lat</th>
-                        <th scope="col">long</th>
-                        <th scope="col">category</th>
+                        <th scope="col">Logo</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Zone</th>
+                        <th scope="col">Category</th>
                         <th scope="col">Active</th>
                         <th scope="col">Actions</th>
                         </tr>
@@ -42,8 +41,7 @@
                         <td>{{$record->name_ar}}</td>
                         <td><img src = "{{$record->logo}}" height="100px" width="100px"></td>
                         <td>{{$record->address}}</td>
-                        <td>{{$record->lat}}</td>
-                        <td>{{$record->long}}</td>
+                        <td>{{$record->zone_id}}</td>
                         <td>{{$record->category_id}}</td>
 
                         <td>
@@ -56,9 +54,9 @@
                                         @method('put')
                                         <input type="hidden" value="{{$record->id}}" name="id">
                                         @if($record->active == true)
-                                            <button type="submit" class="btn btn-success mt-1"><i class="far fa-true"></i></button>
+                                            <button type="submit" class="btn btn-success mt-1"><i class="fa fa-check"></i></button>
                                         @else
-                                            <button type="submit" class="btn btn-danger mt-1"><i class="far fa-pause"></i></button>
+                                            <button type="submit" class="btn btn-danger mt-1"><i class="far fa-times"></i></button>
                                         @endif
                                     </form>
                                 </div>

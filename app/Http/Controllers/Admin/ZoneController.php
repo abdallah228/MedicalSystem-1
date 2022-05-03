@@ -3,18 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\ServiceCreateRequest  as CreateRequest;
-use App\Http\Requests\Admin\ServiceUpdateRequest  as UpdateRequest;
-use App\Models\Service as Model;
-use App\Models\ServiceProvider;
+use App\Http\Requests\Admin\ZoneCreateRequest as CreateRequest;
+use App\Http\Requests\Admin\ZoneUpdateRequest  as UpdateRequest;
+use App\Models\Zone  as Model;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
-class ServicesController extends Controller
+class ZoneController extends Controller
 {
-    public $path = 'services';
+    public $path = 'zones';
 
-  
     /**
     * Get All Records
     * @return \Illuminate\Http\JsonResponse
@@ -23,8 +21,8 @@ class ServicesController extends Controller
     public function index()
     {
         try {
-            $records = Model::with('serviceProvider')->latest()->paginate(2);
-            return view($this->path.'.list',compact('records'));
+            $records = Model::latest()->paginate(2);
+            return view($this->path.'.list', compact('records'));
         } catch (\Throwable $th) {
             Log::error($th);
             return view('layouts.wrong');
@@ -39,7 +37,7 @@ class ServicesController extends Controller
     public function show($id)
     {
         try {
-            $record = Model::with('serviceProvider')->find($id);
+            $record = Model::find($id);
             if ($record){
                 return view($this->path.'.show',compact(['record']));
             }else {
@@ -58,8 +56,7 @@ class ServicesController extends Controller
      */
     public function create()
     {
-        $serviceProviders = ServiceProvider::whereActive(true)->get();
-        return view($this->path.'.add-edit',compact(['serviceProviders']));
+        return view($this->path.'.add-edit');
     }
 
     /**
@@ -71,10 +68,7 @@ class ServicesController extends Controller
     public function store(CreateRequest $request)
     {
         try {
-            if($request->hasFile('img')){
-                $request['image'] = uploadImage($request->file('img'),$this->path);
-            }
-            Model::create($request->except('img'));
+            Model::create($request->all());
             return redirect('admin/'.$this->path)->with('success','Created Successfully');
         } catch (\Throwable $th) {
             Log::error($th);
@@ -91,10 +85,9 @@ class ServicesController extends Controller
     public function edit(Request $request)
     {
         try {
-           $record = Model::with('serviceProvider')->find($request->id);
+            $record = Model::find($request->id);
             if ($record){
-                $serviceProviders = ServiceProvider::whereActive(true)->get();
-                return view($this->path.'.add-edit',compact(['record','serviceProviders']));
+                return view($this->path.'.add-edit',compact(['record']));
             }else {
                 return redirect('admin/'.$this->path)->with('error','Not Found');
             }
@@ -114,11 +107,7 @@ class ServicesController extends Controller
         try {
             $record = Model::find($id);
             if ($record){
-                deleteImage($record->getRawOriginal('image'),$this->path);
-                if($request->hasFile('img')){
-                    $request['image'] = uploadImage($request->file('img'),$this->path);
-                }
-                $record->update($request->except('img'));
+                $record->update($request->all());
                 return redirect('admin/'.$this->path)->with('success','Updated Successfully');
             }else {
                 return redirect('admin/'.$this->path)->with('error','Not Found');
@@ -139,7 +128,6 @@ class ServicesController extends Controller
         try {
             $record = Model::find($id);
             if ($record){
-                deleteImage($record->getRawOriginal('image'),$this->path);
                 $record->delete();
                 return redirect('admin/'.$this->path)->with('success','Deleted Successfully');
             }else {
@@ -178,7 +166,7 @@ class ServicesController extends Controller
             $record = Model::onlyTrashed()->find($id);
             if ($record){
                 $record->restore();
-                return redirect('/'.$this->path.'/trashed')->with('success','Restored Successfully');
+                return redirect('admin/'.$this->path.'/trashed')->with('success','Restored Successfully');
             }else {
                 return redirect('admin/'.$this->path)->with('error','Not Found');
             }
@@ -210,4 +198,5 @@ class ServicesController extends Controller
             return view('layouts.wrong');
         }
     }
+
 }

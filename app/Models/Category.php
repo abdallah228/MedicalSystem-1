@@ -17,6 +17,11 @@ class Category extends Model
         return $this->hasMany(ServiceProvider::class,'category_id');
     }
 
+    public function parentCategory()
+    {
+        return $this->belongsTo(Category::class,'parent_id');
+    }
+
     public function getIconAttribute($value)
     {
         return $value = asset('uploads/categories/'.$value);

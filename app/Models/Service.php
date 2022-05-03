@@ -12,7 +12,7 @@ class Service extends Model
     protected $guarded = [];
 
 
-    public function service_provider()
+    public function serviceProvider()
     {
         return $this->belongsTo(ServiceProvider::class,'service_provider_id');
     }

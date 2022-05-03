@@ -26,7 +26,7 @@ class CategoryUpdateRequest extends FormRequest
         return [
             'name_en' => 'required',
             'name_ar' => 'required',
-            'icon' => 'required',
+            'icon' => 'mimes:jpg,jpeg,png'
         ];
     }
 }

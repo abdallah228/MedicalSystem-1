@@ -1,6 +1,5 @@
 @extends('layouts.app')
 @section('content')
-
                     <div class="row">
                         <div class="col-5 m-1">
                             <a href="{{route('categories.create')}}" class="btn btn-success mb-4 mt-2"><i class = "fa fa-plus"></i> Add New </a>  
@@ -27,7 +26,7 @@
                         <th scope="col">Name AR</th>
                         <th scope="col">Icon</th>
                         <th scope="col">type</th>
-                        <th scope="col">Parent Category</th>
+                        <th scope="col">Sub Category</th>
                         <th scope="col">Need Delivery</th>
                         <th scope="col">Active</th>
                         <th scope="col">Actions</th>
@@ -41,21 +40,38 @@
                         <td>{{$record->name_ar}}</td>
                         <td><img src = "{{$record->icon}}"></td>
                         <td>{{$record->type}}</td>
-                        <td>{{$record->parent_category}}</td>
-                        <td>{{$record->need_delivery}}</td>
+                        <td>{{$record->parentCategory->name_en ?? 'N/A'}}</td>
                         <td>
                             <div class="row">
                                 <div class="col-10 col-md-3">
-                                    <!-- Delete Button -->
-                                    <form method="post" action="{{url('admin/categories/changeStatues'.$record->id)}}"
+                                    <!-- needDelivery Button -->
+                                    <form method="post" action="{{url('admin/categories/needDelivery/'.$record->id)}}"
                                         enctype="multipart/form-data">
                                         {{csrf_field()}}
-                                        @method('delete')
+                                        @method('put')
+                                        <input type="hidden" value="{{$record->id}}" name="id">
+                                        @if($record->need_delivery == true)
+                                            <button type="submit" class="btn btn-success mt-1"><i class="fa fa-check"></i></button>
+                                        @else
+                                            <button type="submit" class="btn btn-danger mt-1"><i class="far fa-times"></i></button>
+                                        @endif
+                                    </form>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="row">
+                                <div class="col-10 col-md-3">
+                                    <!-- changeStatues Button -->
+                                    <form method="post" action="{{url('admin/categories/changeStatues/'.$record->id)}}"
+                                        enctype="multipart/form-data">
+                                        {{csrf_field()}}
+                                        @method('put')
                                         <input type="hidden" value="{{$record->id}}" name="id">
                                         @if($record->active == true)
-                                            <button type="submit" class="btn btn-success mt-1"><i class="far fa-true"></i></button>
+                                            <button type="submit" class="btn btn-success mt-1"><i class="fa fa-check"></i></button>
                                         @else
-                                            <button type="submit" class="btn btn-danger mt-1"><i class="far fa-pause"></i></button>
+                                            <button type="submit" class="btn btn-danger mt-1"><i class="far fa-times"></i></button>
                                         @endif
                                     </form>
                                 </div>
@@ -102,6 +118,7 @@
                     </tbody>
                     @endforeach
                 </table>
-                </div>
-                @endif
+            </div>
+            {{ $records->links() }}    
+        @endif
 @endsection

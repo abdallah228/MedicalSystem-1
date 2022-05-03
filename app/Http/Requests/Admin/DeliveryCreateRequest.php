@@ -24,13 +24,10 @@ class DeliveryCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            //
             'name'=>'required',
             'address'=>'required',
             'phone'=>'required|unique:deliveries,phone',
-            'lat'=>'required',
-            'long'=>'required',
-
+            'zone_id'=>'required',
         ];
     }
 }

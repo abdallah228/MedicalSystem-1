@@ -40,16 +40,22 @@ $flag=1;
 
     <div class="form-group">
         <label for="exampleFormControlSelect1"> Image </label>
-        <input type="file" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name = "image" value="{{$flag ? $record->image : old('image')}}" >
-        <img src="{{ $flag ? $record->image : old('image') }}" height="200px" width="200px" >
+        <input type="file" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" name ="img" value="{{$flag ? $record->image : old('image')}}" @if(!$flag)required @endif >
     </div>
 
     <div class="form-group">
     <label for="exampleFormControlSelect1"> Service Provider </label>
     <select class="form-control" name="service_provider_id">
+        <option value="{{$flag ? $record->service_provider_id : ''}}">{{$flag ? $record->serviceProvider->name_en ?? '' : ''}} </option>
         @foreach($serviceProviders as $serviceProvider)
-        <option value=""> </option>
+        @if($flag)
+        @if($record->service_provider_id == $serviceProvider->id)
+        @else
         <option value="{{ $serviceProvider->id }}">{{ $serviceProvider["name_".app()->getLocale()]  }}</option>
+        @endif
+        @else
+        <option value="{{ $serviceProvider->id }}">{{ $serviceProvider["name_".app()->getLocale()]  }}</option>
+        @endif
         @endforeach
     </select>
     </div>

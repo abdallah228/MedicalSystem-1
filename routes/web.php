@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\ServiceProvidersController;
 use App\Http\Controllers\Admin\ServicesController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\ZoneController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -44,6 +45,7 @@ Route::group(['prefix' => 'admin/', 'middleware' => 'auth:admin'], function () {
         Route::put('/{id}', [CategoriesController::class, 'update'])->name('categories.update');
         Route::delete('/{id}', [CategoriesController::class, 'destroy'])->name('categories.destroy');
         Route::put('/restore/{id}', [CategoriesController::class, 'restore'])->name('categories.restore');
+        Route::put('/needDelivery/{id}', [CategoriesController::class, 'needDelivery'])->name('categories.needDelivery');
         Route::put('/changeStatues/{id}', [CategoriesController::class, 'changeStatues'])->name('categories.changeStatues');
     });
 
@@ -55,12 +57,28 @@ Route::group(['prefix' => 'admin/', 'middleware' => 'auth:admin'], function () {
         Route::get('/create', [DeliveriesController::class, 'create'])->name('deliveries.create');
         Route::get('/edit/{id}', [DeliveriesController::class, 'edit'])->name('deliveries.edit');
         Route::get('/trashed', [DeliveriesController::class, 'trashed'])->name('deliveries.trashed');
-        // Route::get('/{id}', [DeliveriesController::class, 'show'])->name('deliveries.show');
+        Route::get('/{id}', [DeliveriesController::class, 'show'])->name('deliveries.show');
         Route::post('/', [DeliveriesController::class, 'store'])->name('deliveries.store');
         Route::put('/{id}', [DeliveriesController::class, 'update'])->name('deliveries.update');
         Route::delete('/{id}', [DeliveriesController::class, 'destroy'])->name('deliveries.destroy');
         Route::put('/restore/{id}', [DeliveriesController::class, 'restore'])->name('deliveries.restore');
         Route::put('/changeStatues/{id}', [DeliveriesController::class, 'changeStatues'])->name('deliveries.changeStatues');
+    });
+
+    /**
+     * Zones
+     */
+    Route::group(['prefix'=>'zones'], function() {
+        Route::get('/', [ZoneController::class, 'index'])->name('zones.index');
+        Route::get('/create', [ZoneController::class, 'create'])->name('zones.create');
+        Route::get('/edit', [ZoneController::class, 'edit'])->name('zones.edit');
+        Route::get('/trashed', [ZoneController::class, 'trashed'])->name('zones.trashed');
+        Route::get('/{id}', [ZoneController::class, 'show'])->name('zones.show');
+        Route::post('/', [ZoneController::class, 'store'])->name('zones.store');
+        Route::put('/{id}', [ZoneController::class, 'update'])->name('zones.update');
+        Route::delete('/{id}', [ZoneController::class, 'destroy'])->name('zones.destroy');
+        Route::put('/restore/{id}', [ZoneController::class, 'restore'])->name('zones.restore');
+        Route::put('/changeStatues/{id}', [ZoneController::class, 'changeStatues'])->name('zones.changeStatues');
     });
 
     /**
