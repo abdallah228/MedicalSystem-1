@@ -53,8 +53,9 @@ Route::group(['prefix' => 'admin/', 'middleware' => 'auth:admin'], function () {
     Route::group(['prefix'=>'deliveries'], function() {
         Route::get('/', [DeliveriesController::class, 'index'])->name('deliveries.index');
         Route::get('/create', [DeliveriesController::class, 'create'])->name('deliveries.create');
+        Route::get('/edit/{id}', [DeliveriesController::class, 'edit'])->name('deliveries.edit');
         Route::get('/trashed', [DeliveriesController::class, 'trashed'])->name('deliveries.trashed');
-        Route::get('/{id}', [DeliveriesController::class, 'show'])->name('deliveries.show');
+        // Route::get('/{id}', [DeliveriesController::class, 'show'])->name('deliveries.show');
         Route::post('/', [DeliveriesController::class, 'store'])->name('deliveries.store');
         Route::put('/{id}', [DeliveriesController::class, 'update'])->name('deliveries.update');
         Route::delete('/{id}', [DeliveriesController::class, 'destroy'])->name('deliveries.destroy');

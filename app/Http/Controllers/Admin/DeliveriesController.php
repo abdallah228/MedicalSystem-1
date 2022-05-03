@@ -44,7 +44,7 @@ class DeliveriesController extends Controller
             $record = new SingleResource($data);
                 return view($this->path.'.show',compact(['record']));
             }else {
-                 return redirect('/'.$this->path)->with('error','Not Found');
+                return redirect('/'.$this->path)->with('error','Not Found');
             }
         } catch (\Throwable $th) {
             Log::error($th);
@@ -72,7 +72,7 @@ class DeliveriesController extends Controller
     {
         try {
             $record = Model::create($request->all());
-            return redirect('/'.$this->path)->with('success','Created Successfully');
+            return redirect()->route('deliveries.index')->with('success','Created Successfully');
         } catch (\Throwable $th) {
             Log::error($th);
             return view('layouts.500');
@@ -88,8 +88,8 @@ class DeliveriesController extends Controller
     public function edit($id)
     {
         try {
-           $data = Model::find($id);
-            if ($data){
+           $record = Model::find($id);
+            if ($record){
                 return view($this->path.'.add-edit',compact(['record']));
             }else {
                 return redirect('/'.$this->path)->with('error','Not Found');
@@ -111,7 +111,7 @@ class DeliveriesController extends Controller
             $record = Model::find($id);
             if ($record){
                 $record->update($request->all());
-                return redirect('/'.$this->path)->with('success','Updated Successfully');
+                return redirect()->route('deliveries.index')->with('success','Updated Successfully');
             }else {
                 return redirect('/'.$this->path)->with('error','Not Found');
             }
@@ -132,7 +132,7 @@ class DeliveriesController extends Controller
             $record = Model::find($id);
             if ($record){
                 $record->delete();
-                return redirect('/'.$this->path)->with('success','Deleted Successfully');
+                return redirect()->back()->with('success','Deleted Successfully');
             }else {
                 return redirect('/'.$this->path)->with('error','Not Found');
             }
