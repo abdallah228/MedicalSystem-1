@@ -129,5 +129,6 @@ Route::group(['prefix' => 'admin/', 'middleware' => 'auth:admin'], function () {
         Route::put('/changeStatues/{id}', [UserController::class, 'changeStatues'])->name('users.changeStatues');
     });
 
+
 });
 
