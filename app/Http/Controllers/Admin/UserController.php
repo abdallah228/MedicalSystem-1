@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Log;
 class UserController extends Controller
 {
     public $path = 'users';
-    
+
     /**
     * Get All Records
     * @return \Illuminate\Http\JsonResponse
@@ -19,8 +19,7 @@ class UserController extends Controller
     public function index()
     {
         try {
-            $data = Model::latest()->get();
-            $records = ListResource::collection($data);
+            $records = Model::latest()->get();
             return view($this->path.'.list', compact('records'));
         } catch (\Throwable $th) {
             Log::error($th);
@@ -41,7 +40,7 @@ class UserController extends Controller
             if ($record){
                 $record->active = !$record->active;
                 $record->save();
-                return redirect('/'.$this->path)->with('success','Statues Changed Successfully');
+                return redirect('admin/'.$this->path)->with('success','Statues Changed Successfully');
             }else {
                 return redirect('/'.$this->path)->with('error','Not Found');
             }
