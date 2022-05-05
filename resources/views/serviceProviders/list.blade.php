@@ -41,8 +41,8 @@
                         <td>{{$record->name_ar}}</td>
                         <td><img src = "{{$record->logo}}" height="100px" width="100px"></td>
                         <td>{{$record->address}}</td>
-                        <td>{{$record->zone_id}}</td>
-                        <td>{{$record->category_id}}</td>
+                        <td>{{$record->zone['name_'.app()->getLocale()]}}</td>
+                        <td>{{$record->category['name_'.app()->getLocale()]}}</td>
 
                         <td>
                             <div class="row">
