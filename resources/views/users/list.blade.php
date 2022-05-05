@@ -56,5 +56,7 @@
                     @endforeach
                 </table>
                 </div>
+            {!! $records -> links() !!}
+
                 @endif
 @endsection

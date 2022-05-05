@@ -19,7 +19,7 @@ class UserController extends Controller
     public function index()
     {
         try {
-            $records = Model::latest()->get();
+            $records = Model::latest()->paginate(PAGINATION_COUNT);
             return view($this->path.'.list', compact('records'));
         } catch (\Throwable $th) {
             Log::error($th);

@@ -50,11 +50,11 @@
                         <td>{{$record->address}}</td>
                         <td>
                             @if($record->active == 0)
-                            {!! "<button class='btn-warning btn-sm'> pending</button>"  !!}
+                            {!! "<lable class='text-warning text-md'> pending</lable>"  !!}
                             @elseif ($record->active == 1)
-                            {!! "<button class='btn-success btn-sm'> Approved</button>"  !!}
+                            {!! "<lable class='text-success text-md'> Approved</lable>"  !!}
                             @else
-                            {!! "<button class='btn-danger btn-sm'> Refused</button>"  !!}
+                            {!! "<lable class='text-danger text-md'> Refused</lable>"  !!}
                             @endif
                         </td>
                         <td>
@@ -69,18 +69,18 @@
                                         <div class = "btn-group">
                                             @if($record->active == 0)
 
-                                                <button class='btn btn-success btn-sm border-1 border-success' name="active" value="approved"> Approved</button>
-                                                <button class='btn btn-danger btn-sm border-1 border-danger' name="active" value="refused"> Refused</button>
+                                                <button class='btn btn-success btn-sm border-1 border-success mr-2' name="active" value="approved"> Approved</button>
+                                                <button class='btn btn-danger btn-sm border-1 border-danger mr-2' name="active" value="refused"> Refused</button>
 
                                             @elseif ($record->active == 1)
 
-                                                <button class='btn btn-danger btn-sm border-1 border-danger' name="active" value="refused"> Refused</button>
-                                                <button class='btn btn-warning btn-sm border-1 border-warning ' name="active" value="pending"> Pending</button>
+                                                <button class='btn btn-danger btn-sm border-1 border-danger mr-2' name="active" value="refused"> Refused</button>
+                                                <button class='btn btn-warning btn-sm border-1 border-warning mr-2' name="active" value="pending"> Pending</button>
 
                                             @elseif($record->active == 2)
 
-                                                <button class='btn btn-success btn-sm border-1 border-success' name="active" value="approved"> Approved</button>
-                                                <button class='btn btn-warning btn-sm border-1 border-warning ' name="active" value="pending"> Pending</button>
+                                                <button class='btn btn-success btn-sm border-1 border-success mr-3' name="active" value="approved"> Approved</button>
+                                                <button class='btn btn-warning btn-sm border-1 border-warning mr-2' name="active" value="pending"> Pending</button>
 
                                             @endif
 
@@ -98,5 +98,6 @@
                     @endforeach
                 </table>
                 </div>
+            {{ $records->links() }}
                 @endif
 @endsection

@@ -2,7 +2,7 @@
 @section('content')
                     <div class="row">
                         <div class="col-5 m-1">
-                            <a href="{{route('categories.create')}}" class="btn btn-success mb-4 mt-2"><i class = "fa fa-plus"></i> Add New </a>  
+                            <a href="{{route('categories.create')}}" class="btn btn-success mb-4 mt-2"><i class = "fa fa-plus"></i> Add New </a>
                         </div>
                         <div class="col-6">
                             <!-- Actual search box -->
@@ -75,7 +75,7 @@
                                         @endif
                                     </form>
                                 </div>
-                            </div>    
+                            </div>
                         </td>
                         <td>
                         <div class="row">
@@ -91,7 +91,7 @@
                             </div>
                             <div class="col-10 col-md-3">
                                 <!-- Edit Button -->
-                                <form method="post" 
+                                <form method="post"
                                     action= "{{route('categories.edit')}}"
                                     enctype="multipart/form-data">
                                         {{csrf_field()}}
@@ -102,7 +102,7 @@
                             </div>
                             <div class="col-10 col-md-3">
                                 <!-- Show Button -->
-                                <form method="post" 
+                                <form method="post"
                                     action= "{{url('admin/categories/'.$record->id)}}"
                                     enctype="multipart/form-data">
                                         {{csrf_field()}}
@@ -119,6 +119,6 @@
                     @endforeach
                 </table>
             </div>
-            {{ $records->links() }}    
+            {{ $records->links() }}
         @endif
 @endsection

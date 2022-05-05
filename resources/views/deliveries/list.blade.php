@@ -53,7 +53,7 @@
                                         @endif
                                     </form>
                                 </div>
-                            </div>    
+                            </div>
                         </td>
                         <td>
                         <div class="row">
@@ -85,6 +85,7 @@
                     </tbody>
                     @endforeach
                 </table>
-                </div>
-                @endif
+            </div>
+            {!! $records -> links() !!}
+            @endif
 @endsection

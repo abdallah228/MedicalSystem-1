@@ -22,7 +22,7 @@ class CategoriesController extends Controller
     public function index()
     {
         try {
-            $records = Model::with('parentCategory')->latest()->paginate(2);
+            $records = Model::with('parentCategory')->latest()->paginate(PAGINATION_COUNT);
             return view($this->path.'.list',compact('records'));
         } catch (\Throwable $th) {
             Log::error($th);
@@ -233,6 +233,6 @@ class CategoriesController extends Controller
             return view('layouts.wrong');
         }
     }
-    
+
 
 }

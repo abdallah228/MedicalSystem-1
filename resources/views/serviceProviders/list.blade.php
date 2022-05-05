@@ -104,5 +104,6 @@
                     @endforeach
                 </table>
                 </div>
-                @endif
+            {!! $records -> links() !!}
+        @endif
 @endsection

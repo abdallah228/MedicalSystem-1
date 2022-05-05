@@ -21,7 +21,7 @@ class DeliveriesController extends Controller
     public function index()
     {
         try {
-            $records = Model::latest()->paginate(2);
+            $records = Model::latest()->paginate(PAGINATION_COUNT);
             return view($this->path.'.list', compact('records'));
         } catch (\Throwable $th) {
             Log::error($th);

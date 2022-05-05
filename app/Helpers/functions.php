@@ -38,6 +38,9 @@ if (!function_exists('deleteImage')) {
         }
         return 0;
     }
+
+
+    define('PAGINATION_COUNT',10);
 }
 
 

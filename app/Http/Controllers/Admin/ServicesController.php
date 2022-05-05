@@ -14,7 +14,7 @@ class ServicesController extends Controller
 {
     public $path = 'services';
 
-  
+
     /**
     * Get All Records
     * @return \Illuminate\Http\JsonResponse
@@ -23,7 +23,7 @@ class ServicesController extends Controller
     public function index()
     {
         try {
-            $records = Model::with('serviceProvider')->latest()->paginate(2);
+            $records = Model::with('serviceProvider')->latest()->paginate(PAGINATION_COUNT);
             return view($this->path.'.list',compact('records'));
         } catch (\Throwable $th) {
             Log::error($th);

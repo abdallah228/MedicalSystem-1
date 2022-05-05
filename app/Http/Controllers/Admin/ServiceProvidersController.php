@@ -22,7 +22,7 @@ class ServiceProvidersController extends Controller
     public function index()
     {
         try {
-            $records = Model::with('category')->latest()->paginate(2);
+            $records = Model::with('category')->latest()->paginate(PAGINATION_COUNT);
             return view($this->path.'.list', compact('records'));
         } catch (\Throwable $th) {
             Log::error($th);
