@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ZoneCreateRequest as CreateRequest;
 use App\Http\Requests\Admin\ZoneUpdateRequest  as UpdateRequest;
+use App\Models\Delivery;
+use App\Models\ServiceProvider;
 use App\Models\Zone  as Model;
+use App\Models\Zone;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
@@ -126,6 +129,12 @@ class ZoneController extends Controller
     public function destroy($id)
     {
         try {
+            $serviceProvider = ServiceProvider::where('zone_id',$id)->pluck('zone_id');
+            $delivery = Delivery::where('zone_id',$id)->pluck('zone_id');
+
+            if($serviceProvider->count() > 0 || $delivery->count() > 0) {
+                return redirect('admin/'.$this->path)->with('success','cant be Deleted ! you should delete related serviceProvider or deliveries at first');
+            }
             $record = Model::find($id);
             if ($record){
                 $record->delete();

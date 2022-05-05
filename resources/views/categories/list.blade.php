@@ -38,7 +38,7 @@
                         <td>{{$record->id}}</td>
                         <td>{{$record->name_en}}</td>
                         <td>{{$record->name_ar}}</td>
-                        <td><img src = "{{$record->icon}}"></td>
+                        <td><img src = "{{$record->icon}}" height="200px" width="200px"></td>
                         <td>{{$record->type}}</td>
                         <td>{{$record->parentCategory->name_en ?? 'N/A'}}</td>
                         <td>

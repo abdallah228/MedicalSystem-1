@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\ServiceProviderCreateRequest  as CreateRequest;
 use App\Http\Requests\Admin\ServiceProviderUpdateRequest  as UpdateRequest;
 use App\Models\Category;
+use App\Models\Service;
 use App\Models\ServiceProvider  as Model;
 use App\Models\Zone;
 use Illuminate\Support\Facades\Log;
@@ -138,6 +139,11 @@ class ServiceProvidersController extends Controller
     public function destroy($id)
     {
         try {
+            $service = Service::where('service_provider_id',$id)->pluck('service_provider_id');
+
+            if($service->count() > 0) {
+                return redirect('admin/'.$this->path)->with('success','cant be Deleted ! you should delete related service first');
+            }
             $record = Model::find($id);
             if ($record){
                 deleteImage($record->getRawOriginal('logo'),$this->path);

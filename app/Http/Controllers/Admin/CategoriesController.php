@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\CategoryCreateRequest  as CreateRequest;
 use App\Http\Requests\Admin\CategoryCreateRequest  as UpdateRequest;
 use App\Models\Category  as Model;
+use App\Models\Category;
+use App\Models\ServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -138,6 +140,12 @@ class CategoriesController extends Controller
     public function destroy($id)
     {
         try {
+            $serviceProvider = ServiceProvider::where('category_id',$id)->pluck('category_id');
+            $subCategory = Category::where('parent_id',$id)->pluck('parent_id');
+
+            if($serviceProvider->count() > 0 || $subCategory->count() > 0 ) {
+                return redirect('admin/'.$this->path)->with('success','cant be Deleted ! you should delete related subCategory and serviceProviders at first');
+            }
             $record = Model::find($id);
             if ($record){
                 deleteImage($record->getRawOriginal('icon'),$this->path);
