@@ -2,12 +2,12 @@
     <x-auth-card>
         <x-slot name="logo">
                 <a href="/login">
-                    <img src="{{asset('logo.png')}}" width="50%" height="50%">
+                    <img src="{{asset('logo.png')}}" width="200px" height="200px">
                 </a>
         </x-slot>
 
         <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
+        <x-auth-session-status class="mb-4"  :status="session('status')" />
 
         <!-- Validation Errors -->
         <x-auth-validation-errors class="mb-4" :errors="$errors" />
