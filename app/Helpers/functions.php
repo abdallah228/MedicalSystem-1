@@ -13,7 +13,7 @@ if (!function_exists('uploadImage')) {
      */
     function uploadImage($upload, $path, $resize_width = null, $resize_height = null): string
     {
-        $checkPath = 'app/public/'.$path;
+        $checkPath = 'app/public/uploads'.$path;
         if (!file_exists(storage_path($checkPath))) {
             mkdir(storage_path($checkPath), 0755, true);
         }

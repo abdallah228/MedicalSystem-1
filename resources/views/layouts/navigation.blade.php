@@ -42,11 +42,24 @@
                     </x-nav-link>
                 </div>
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('reservations.index')">
+                    <x-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
                         <strong> Users </strong>
                     </x-nav-link>
                 </div>
+
+            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                <x-nav-link :href="route('setting.index')" :active="request()->routeIs('setting.index')">
+                    <strong> Settings </strong>
+                </x-nav-link>
             </div>
+
+            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                <x-nav-link :href="route('ads.index')" :active="request()->routeIs('ads.index')">
+                    <strong> Ads </strong>
+                </x-nav-link>
+            </div>
+
+        </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
@@ -127,6 +140,16 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('users.index')" :active="request()->routeIs('users.index')">
                 <strong> Users</strong>
+            </x-responsive-nav-link>
+        </div>
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('setting.index')" :active="request()->routeIs('setting.index')">
+                <strong> Settings</strong>
+            </x-responsive-nav-link>
+        </div>
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('ads.index')" :active="request()->routeIs('ads.index')">
+                <strong> Ads</strong>
             </x-responsive-nav-link>
         </div>
 

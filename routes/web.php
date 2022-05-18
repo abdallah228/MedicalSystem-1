@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\AdsController;
 use App\Http\Controllers\Admin\CategoriesController;
 use App\Http\Controllers\Admin\DeliveriesController;
 use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\ServiceProvidersController;
 use App\Http\Controllers\Admin\ServicesController;
+use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\ZoneController;
 use Illuminate\Support\Facades\Route;
@@ -129,6 +131,35 @@ Route::group(['prefix' => 'admin/', 'middleware' => 'auth:admin'], function () {
         Route::put('/changeStatues/{id}', [UserController::class, 'changeStatues'])->name('users.changeStatues');
     });
 
-
+/**
+     * Settings
+     */
+    Route::group(['prefix'=>'settings'], function() {
+        Route::get('/', [SettingsController::class, 'index'])->name('setting.index');
+        Route::get('/create', [SettingsController::class, 'create'])->name('setting.create');
+        Route::get('/edit/{id}', [SettingsController::class, 'edit'])->name('setting.edit');
+        Route::get('/trashed', [SettingsController::class, 'trashed'])->name('setting.trashed');
+        Route::get('/{id}', [SettingsController::class, 'show'])->name('setting.show');
+        Route::post('/', [SettingsController::class, 'store'])->name('setting.store');
+        Route::put('/{id}', [SettingsController::class, 'update'])->name('setting.update');
+        Route::delete('/{id}', [SettingsController::class, 'destroy'])->name('setting.destroy');
+        Route::put('/restore/{id}', [SettingsController::class, 'restore'])->name('setting.restore');
+        Route::put('/changeStatues/{id}', [SettingsController::class, 'changeStatues'])->name('setting.changeStatues');
+    });
+    /**
+     * adds
+     */
+    Route::group(['prefix'=>'ads'], function() {
+        Route::get('/', [AdsController::class, 'index'])->name('ads.index');
+        Route::get('/create', [AdsController::class, 'create'])->name('ads.create');
+        Route::get('/edit/{id}', [AdsController::class, 'edit'])->name('ads.edit');
+        Route::get('/trashed', [AdsController::class, 'trashed'])->name('ads.trashed');
+        Route::get('/{id}', [AdsController::class, 'show'])->name('ads.show');
+        Route::post('/', [AdsController::class, 'store'])->name('ads.store');
+        Route::put('/{id}', [AdsController::class, 'update'])->name('ads.update');
+        Route::delete('/{id}', [AdsController::class, 'destroy'])->name('ads.destroy');
+        Route::put('/restore/{id}', [AdsController::class, 'restore'])->name('ads.restore');
+        Route::put('/changeStatues/{id}', [AdsController::class, 'changeStatues'])->name('ads.changeStatues');
+    });
 });
 
