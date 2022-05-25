@@ -12,8 +12,8 @@ class Ad extends Model
     protected $table = 'ads';
 
 
-    // public function getImageAttribute($value)
-    // {
-    //     return $value = asset('uploads/ads/'.$value);
-    // }
+    public function getImageAttribute($value)
+    {
+        return $value = asset('uploads/ads/'.$value);
+    }
 }
